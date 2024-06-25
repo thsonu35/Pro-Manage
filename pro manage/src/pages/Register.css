@@ -1,0 +1,107 @@
+.register-container {
+    display: flex;
+    height: 100vh;
+}
+
+.register-left {
+    flex: 1;
+    background-color: #17A2B8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+.img-Div {
+    height: 400px;
+    width: 400px;
+}
+/* .onbording-msg{
+
+} */
+.astronaut-img {
+   height: 100%;
+   width:  100%;
+}
+
+.register-welcome {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.register-right {
+    flex: 1;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form-container {
+    width: 80%;
+    max-width: 400px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.input-box label {
+    flex: 0 0 40px;
+}
+
+.input-box input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-button {
+    width: 90%;
+    max-width: 400px;
+    padding: 10px;
+margin-left: 10% ;  
+  background-color: #17A2B8;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #0079b3;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+footer a {
+    display: inline-block;
+    width: 88%;
+    max-width: 400px;
+    padding: 10px;
+margin-left: 8% ; 
+    color: #17A2B8;
+    border: 1px solid #17A2B8;
+    border-radius: 30px;
+    text-decoration: none;
+
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}

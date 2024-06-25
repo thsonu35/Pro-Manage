@@ -1,0 +1,105 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.priority {
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.priority.low {
+    background-color: #4caf50;
+}
+
+.priority.medium {
+    background-color: #ff9800;
+}
+
+.priority.high {
+    background-color: #f44336;
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.card-body {
+    margin-top: 10px;
+}
+
+.due-date {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.due-date.overdue {
+    color: red;
+}
+
+.due-date.done {
+    color: green;
+}
+
+.checklist {
+    margin-top: 10px;
+}
+
+.checklist-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.collapse-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.checklist-items {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.checklist-items li {
+    padding: 5px 0;
+}
+
+.checklist-items li.completed {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.card-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.card-footer button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.card-footer button:hover {
+    background: #0056b3;
+}

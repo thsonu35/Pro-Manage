@@ -1,0 +1,43 @@
+.board-container {
+    padding: 10px;
+    position: relative;
+    height: calc(100vh - 145px); /* Adjust as needed for the overall height */
+}
+
+.board {
+    display: flex;
+    overflow-x: auto;
+    height: 91%;
+}
+
+.column {
+    flex: 0 0 25%;
+    margin: 0 30px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-task-button {
+    cursor: pointer;
+    margin-right: 10px; /* Adjust margin as needed */
+}
+
+.collapse-icon {
+    cursor: pointer;
+}
+
+.cards {
+    margin-top: 10px;
+    overflow-y: auto;
+    max-height: 70vh; /* Adjust this value as needed for the overall height of the column */
+}

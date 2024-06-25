@@ -1,0 +1,34 @@
+/* src/components/analytics/Analytics.css */
+
+.analytics-container {
+    padding: 20px;
+}
+
+.analytics-cards {
+    display: flex;
+    justify-content: space-between;
+}
+
+.analytics-card {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 20px;
+    width: 45%;
+}
+
+.analytics-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.analytics-card ul li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.analytics-card ul li span {
+    font-weight: 700;
+}

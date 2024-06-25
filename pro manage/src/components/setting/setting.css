@@ -1,0 +1,77 @@
+/* setting.css */
+
+.settings-container {
+    display: flex;
+    min-width: 400px; /* Ensure the container has a minimum width */
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+    min-width: 400px; /* Ensure the content area has a minimum width */
+
+    margin-left: 250px; /* Adjust according to your sidebar width */
+}
+
+.settings-title {
+    margin-bottom: 30px; /* Increased margin-bottom for h1 */
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+   width: 400px;
+    gap: 30px; /* Increased gap between input groups */
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    left: 10px;
+    color: grey;
+    pointer-events: none;
+}
+
+.form-input {
+    width: 400px; /* Fixed width for the input fields */
+    padding: 12px 40px; /* Adjusted padding for input fields */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: grey;
+}
+
+.form-input::placeholder {
+    color: grey;
+}
+
+.toggle-password-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: grey;
+    cursor: pointer;
+}
+
+.update-button {
+    width: 400px;
+    padding: 12px 20px; /* Increased padding for the button */
+    border-radius: 30px; /* Rounded border */
+    background-color: #17A2B8; /* Button color */
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px; /* Added margin-top for spacing */
+}
+
+.update-button:hover {
+    background-color: #117A8B; /* Darker shade of the button color on hover */
+}
