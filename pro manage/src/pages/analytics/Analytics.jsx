@@ -2,10 +2,14 @@
 
 import React from 'react';
 import './Analytics.css';
+import Sidebar from '../../components/slidebar/slidebar';
 
 const Analytics = () => {
     return (
+        <div>
+            <Sidebar/>
         <div className="analytics-container">
+            
             <h1>Analytics</h1>
             <div className="analytics-cards">
                 <div className="analytics-card">
@@ -25,6 +29,7 @@ const Analytics = () => {
                     </ul>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

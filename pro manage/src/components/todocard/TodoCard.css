@@ -1,105 +1,162 @@
-.card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    padding: 15px;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
-.card-header {
+  /* Component-specific styles */
+  .task-card {
+    margin: 1rem 0;
+  }
+  
+  .card-content {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 20px;
+  }
+  
+  .priority-menu {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-}
-
-.priority {
-    padding: 5px 10px;
-    border-radius: 3px;
-    color: #fff;
-}
-
-.priority.low {
-    background-color: #4caf50;
-}
-
-.priority.medium {
-    background-color: #ff9800;
-}
-
-.priority.high {
-    background-color: #f44336;
-}
-
-.card-title {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-.card-body {
-    margin-top: 10px;
-}
-
-.due-date {
-    margin-top: 10px;
-    font-weight: bold;
-}
-
-.due-date.overdue {
-    color: red;
-}
-
-.due-date.done {
-    color: green;
-}
-
-.checklist {
-    margin-top: 10px;
-}
-
-.checklist-summary {
+    justify-content: space-between;
+  }
+  
+  .priority-label {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    cursor: pointer;
-}
-
-.collapse-button {
+    gap: 0.4rem;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    color: rgb(133, 133, 133);
+  }
+  
+  .priority-label::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: red; /* Adjust color as needed */
+  }
+  
+  .menu-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .menu-btn {
     background: none;
     border: none;
-    color: #007bff;
+    padding: 0.4rem;
+  }
+  
+ 
+  
+  .title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 1.2rem;
     cursor: pointer;
-}
-
-.checklist-items {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.checklist-items li {
-    padding: 5px 0;
-}
-
-.checklist-items li.completed {
-    text-decoration: line-through;
-    color: #999;
-}
-
-.card-footer {
-    margin-top: 10px;
+    font-weight: 500;
+    margin-bottom: 1.8rem;
+    width: 60%;
+  }
+  
+  .checklist-toggle-container {
+ 
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .checklist-head {
+    font-size: 1rem;
+    font-weight: 500;
     display: flex;
-    justify-content: space-around;
-}
-
-.card-footer button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
+    justify-content: space-between;
+  }
+  
+  .collapse-expand-btn {
+    width: 21px;
+    height: 24px;
     cursor: pointer;
-}
-
-.card-footer button:hover {
-    background: #0056b3;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(236, 236, 236);
+    border: none;
+  }
+  
+  .expand-icon {
+    font-size: 1.125rem;
+    color: gray;
+  }
+  
+  .expand-icon.collapsed {
+    transform: rotate(180deg);
+  }
+  
+  .checklist-tasks {
+    margin-top: 1rem;
+  }
+  
+  .task-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(226, 226, 226);
+    border-radius: 15px;
+    margin: 0.5rem 0;
+    padding: 0.7rem 0.8rem;
+  }
+  
+  .checkbox {
+    min-width: 15px;
+    min-height: 15px;
+    accent-color: var(--primary-500); /* Adjust checkbox color as needed */
+  }
+  
+  .task-text {
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+  }
+  
+  .mutate-status-container {
+    margin-top: 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Adjust as per your layout */
+  }
+  
+  .mutate-btns-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .status-btn {
+    font-size: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    color: rgb(118, 117, 117);
+    background-color: rgb(219, 219, 219);
+    font-weight: 600;
+    border-radius: 6px;
+    border: transparent;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    top: 2rem;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem;
+    z-index: 10;
+  }
+  
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .dropdown-item.delete {
+    color: red; /* Adjust delete item color as needed */
+  }
+  

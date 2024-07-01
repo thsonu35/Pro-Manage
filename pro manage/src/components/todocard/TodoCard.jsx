@@ -1,60 +1,108 @@
-import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './TodoCard.css';
+import menuIcon from '../../../public/Group 544menu.png';
+import { useState } from 'react';
 
-const TodoCard = ({ task, currentColumn, moveTask }) => {
-    const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(true);
+const TodoCard = ({ task, onEdit, onDelete, onMove }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
-    const handleMove = (toColumn) => {
-        moveTask(task.id, currentColumn, toColumn);
-    };
+  const toggleChecklist = () => {
+    setCollapsed(!collapsed);
+  };
 
-    const toggleChecklist = () => {
-        setIsChecklistCollapsed(!isChecklistCollapsed);
-    };
-
-    const completedItems = task.checklist.filter(item => item.completed).length;
-    const totalItems = task.checklist.length;
-
-    const isDueDatePassed = new Date(task.dueDate) < new Date();
-    const isTaskDone = currentColumn === 'done';
-
-    return (
-        <div className="card">
-            <div className="card-header">
-                <span className={`priority ${task.priority}`}>{task.priority}</span>
-                <h3 className="card-title">{task.title}</h3>
-            </div>
-            <div className="card-body">
-                <p>{task.text}</p>
-                {task.dueDate && (
-                    <div className={`due-date ${isTaskDone ? 'done' : isDueDatePassed ? 'overdue' : ''}`}>
-                        Due: {new Date(task.dueDate).toLocaleDateString()}
-                    </div>
-                )}
-                <div className="checklist">
-                    <div className="checklist-summary" onClick={toggleChecklist}>
-                        <span>{completedItems}/{totalItems} Checklist Items</span>
-                        <button className="collapse-button">{isChecklistCollapsed ? 'Show' : 'Hide'} Checklist</button>
-                    </div>
-                    {!isChecklistCollapsed && (
-                        <ul className="checklist-items">
-                            {task.checklist.map((item, index) => (
-                                <li key={index} className={item.completed ? 'completed' : ''}>
-                                    {item.text}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+  return (
+    <div className="task-card">
+      <aside className="card-content">
+        <div className="priority-menu">
+          <p className="priority-label">
+            <span>{task.priority.toUpperCase()} PRIORITY</span>
+          </p>
+          <div className="menu-container">
+            <button className="menu-btn" onClick={() => setShowMenu(!showMenu)}>
+              <img src={menuIcon} alt="Menu" className="menu-icon" />
+            </button>
+            {showMenu && (
+              <div className="dropdown-menu">
+                <div className="dropdown-item" onClick={onEdit}>
+                  Edit
                 </div>
-            </div>
-            <div className="card-footer">
-                {currentColumn !== 'backlog' && <button onClick={() => handleMove('backlog')}>Backlog</button>}
-                {currentColumn !== 'todo' && <button onClick={() => handleMove('todo')}>To Do</button>}
-                {currentColumn !== 'inProgress' && <button onClick={() => handleMove('inProgress')}>In Progress</button>}
-                {currentColumn !== 'done' && <button onClick={() => handleMove('done')}>Done</button>}
-            </div>
+                <div className="dropdown-item">
+                  Share
+                </div>
+                <div className="dropdown-item delete" onClick={onDelete}>
+                  Delete
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-    );
+        <p className="title">{task.title}</p>
+        <p>{task.dueDate}</p>
+        <div className="checklist-toggle-container">
+          <p className="checklist-head">
+            <span>
+              Checklist ({task.checklist.filter((item) => item.checked).length} / {task.checklist.length})
+            </span>
+            <button className="collapse-expand-btn" onClick={toggleChecklist}>
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 512 512"
+                className={`expand-icon ${collapsed ? 'collapsed' : ''}`}
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z"></path>
+              </svg>
+            </button>
+          </p>
+        </div>
+
+        {!collapsed && (
+          <div className="checklist-tasks">
+            {task.checklist.map((item, index) => (
+              <div key={index} className="task-item">
+                <input type="checkbox" className="checkbox" checked={item.checked} readOnly />
+                <p className="task-text">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="mutate-status-container">
+          <div className="mutate-btns-container">
+            {['TO DO', 'IN PROGRESS', 'DONE'].map((status, index) => (
+              <button key={index} className="status-btn" onClick={() => onMove(status)}>
+                {status}
+              </button>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+};
+
+TodoCard.propTypes = {
+  task: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    priority: PropTypes.string.isRequired,
+    checklist: PropTypes.arrayOf(
+      PropTypes.shape({
+        text: PropTypes.string.isRequired,
+        checked: PropTypes.bool.isRequired,
+      })
+    ).isRequired,
+    dueDate: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onMove: PropTypes.func.isRequired,
 };
 
 export default TodoCard;

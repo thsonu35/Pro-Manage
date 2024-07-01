@@ -7,9 +7,7 @@
 
 .main-content {
     flex-grow: 1;
-    padding: 20px;
     min-width: 400px; /* Ensure the content area has a minimum width */
-
     margin-left: 250px; /* Adjust according to your sidebar width */
 }
 

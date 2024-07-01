@@ -1,7 +1,8 @@
 /* src/components/Sidebar.css */
 .sidebar {
+    height: 100vh;
     width: 250px;
-    background-color: #f8f9fa;
+    border-right: 1px solid rgb(237, 245, 254);
     position: fixed;
     height: 100%;
     padding-top: 20px;
@@ -9,8 +10,13 @@
 }
 
 .logo {
-    font-size: 1.5em;
+    font-size: .7rem;
+    font-weight: bold;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
     text-align: center;
 }
 
@@ -21,15 +27,21 @@ nav ul {
 }
 
 nav ul li {
-    margin: 10px 0;}
-
+    margin: 10px 0;
     
+}
 
-nav ul li a{
+
+
+nav ul li a {
     text-decoration: none;
     color: rgb(76, 75, 75);
-    display: block;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
     border-radius: 4px;
+    align-items: center;
+    justify-content: center;
     transition: background-color 0.3s;
 }
 
@@ -38,23 +50,32 @@ align-items: center;
 justify-content: center;
 } */
 nav ul li a.active {
-    background-color:  #4391ED1A;
+    background-color: #4391ED1A;
     color: black;
 }
 
 .logout {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap:10px;
+    align-items: center;
     position: absolute;
     bottom: 100px;
     width: 100%;
     text-align: center;
 }
 
-.logout a{
+.logout a {
     color: #dc3545;
     text-decoration: none;
 }
 
-img {
-    padding-right: 10px;
-    padding-top: 10px;
+.sidebar-sub-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 50px;
+    /* border: 1px solid red; */
+    gap: 15px;
 }

@@ -1,101 +1,140 @@
-const User = require("../models/user"); // Importing the User model
-const bcrypt = require("bcrypt"); // Importing the bcrypt library for password hashing
-const jwt = require("jsonwebtoken"); // Importing the jsonwebtoken library for generating JSON Web Tokens
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const bcrypt = require('bcrypt')
 
-const register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body; // Destructuring the request body
+const registerUser = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Please fill all the fields' });
+        }
 
-    // Checking if any of the required fields are missing
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: "Please enter all the fields" });
+        const isUserExist = await User.findOne({ email });
+        if (isUserExist) {
+            return res.status(400).send('User already exists');
+        }
+
+        const hashpass = await bcrypt.hash(password, 10);
+
+        const newUser = new User({ name, email, password: hashpass });
+        await newUser.save();
+        res.status(201).send("User registered successfully");
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
     }
-
-    // Checking if a user with the same email or mobile number already exists
-    const isUserExist = await User.findOne({ $or: [{ email }] });
-    if (isUserExist) {
-      return res.status(409).json({ error: "User already exists" }); // Use 409 Conflict status code
-    }
-
-    // Hashing the password using bcrypt
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Creating a new user instance
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    // Saving the new user to the database
-    await user.save();
-
-    // Sending a success response
-    return res.status(201).json({ message: "User created successfully" }); // Use 201 Created status code
-  } catch (err) {
-    // Logging the error and sending a 500 response
-    console.error("Error registering user:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
 };
 
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Check if email and password are provided
-    if (!email || !password) {
-      return res.status(400).json({ error: "Please enter email and password" });
-    }
-
-    // Find the user by email
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Compare the provided password with the stored hashed password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid password" });
-    }
-
-    // Generate a JSON Web Token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "your_secret_key", { expiresIn: '1h' });
-
-    // Return the token to the client
-    res.status(200).json({ token, user });
-  } catch (err) {
-    console.error("Error logging in:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
 const allUsers = async (req, res) => {
-  try {
-    // Check if the user is an admin
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ error: "Please enter email and password" });
+    try {
+        const { email, password } = req.body
+        if (!email || !password) {
+            return res.status(400).send("Please fill all the fields")
+        }
+
+        const isAdmin = email === 'admin@example.com' && password === 'adminpassword'
+        if (!isAdmin) {
+            return res.status(401).send('Unauthorized')
+        }
+
+        const users = await User.find()
+        res.status(200).json(users)
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).send('Server error')
     }
+}
 
-    // Use environment variables for admin credentials
-    const adminEmail = process.env.ADMIN_EMAIL || "admin@backend.com";
-    const adminPassword = process.env.ADMIN_PASSWORD || "admin";
 
-    if (email === adminEmail && password === adminPassword) {
-      // Find all users in the database
-      const users = await User.find();
 
-      // Return the list of users
-      return res.status(200).json(users);
-    } else {
-      return res.status(403).json({ error: "You are not authorized to view all users" });
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).send("Please fill all the fields");
+        }
+
+        const checkUser = await User.findOne({ email });
+        if (!checkUser) {
+            return res.status(400).send('Invalid email or password');
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, checkUser.password); // Use checkUser.password
+        if (!isPasswordValid) {
+            return res.status(400).send('Invalid email or password');
+        }
+
+        const token = jwt.sign(
+            { userId: checkUser._id, email: checkUser.email, name: checkUser.name }, // Include user email in the token payload
+            'secret', // Your secret key
+            { expiresIn: '24h' } // Token expiration time
+        );
+        res.status(200).json({
+            token,
+            
+            name: checkUser.name,
+            email: checkUser.email,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error', error: err.message });
     }
-  } catch (err) {
-    console.error("Error fetching users:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
 };
 
-module.exports = { register, loginUser, allUsers };
+const updatePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        if (!oldPassword || !newPassword) {
+            return res.status(400).send("Please fill all the fields");
+        }
+
+        // Assuming req.userId is set by the auth middleware
+        const checkUser = await User.findById(req.userId);
+
+        if (!checkUser) {
+            return res.status(400).send('User not found');
+        }
+
+        const isPasswordValid = await bcrypt.compare(oldPassword, checkUser.password);
+
+        if (!isPasswordValid) {
+            return res.status(400).send('Invalid old password');
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        checkUser.password = hashedPassword;
+        await checkUser.save();
+
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+
+const nameuser = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const name = ({ name: user.name })
+        res.status(200).send(name);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+
+
+
+
+module.exports = {allUsers, registerUser, nameuser, loginUser,updatePassword};

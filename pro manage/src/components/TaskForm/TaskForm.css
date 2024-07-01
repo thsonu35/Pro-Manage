@@ -6,9 +6,9 @@
     min-width: 650px;
     margin: auto;
     min-height: 500px;
-    /* display: flex; */
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    position: relative;
 }
 
 .form-group {
@@ -22,7 +22,7 @@
 }
 
 .form-group > input, .form-group > .due-date-input {
-    width: 90%;
+    width: 94%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -42,7 +42,9 @@
 
 .priority-button {
     margin-right: 10px;
-    padding: 10px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
     border: 1px solid;
     border-radius: 4px;
     cursor: pointer;
@@ -59,8 +61,8 @@
 }
 
 .priority-icon {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     margin-right: 8px;
 }
@@ -78,7 +80,7 @@
 }
 
 .checklist-container {
-    max-height: 20rem; /* Adjusted max height for demonstration */
+    max-height: 11rem; /* Adjusted max height for demonstration */
     overflow-y: auto; /* Use auto to only show scrollbar when needed */
     padding: 10px;
 }
@@ -97,6 +99,7 @@
     align-items: center;
     background-color: #f8f9fa;
     padding: 10px;
+    border: 1px solid grey;
     border-radius: 8px;
     margin-bottom: 10px;
 }
@@ -109,7 +112,7 @@
     flex: 1; /* Allow input to take remaining space */
     margin-right: 10px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 4px;
 }
 
@@ -125,11 +128,12 @@
 }
 
 .checklist-input button.add-button {
-    padding: 8px 12px;
+    padding: 6px 12px;
+    font-size: 16px;
     border: none;
     border-radius: 4px;
-    background-color: rgb(118, 117, 117);
-    color: white;
+    background-color: white;
+    color: grey;
     cursor: pointer;
     min-width: 70px; /* Adjust width for button */
 }
@@ -144,26 +148,29 @@
 }
 
 .button-group {
-    display: flex;
+    display:flex ;
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
     justify-content: space-between;
-    align-items: center;
+    width: 90%;
+   
 }
 
+
 .due-date-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: 3px solid grey;
-    border-radius: 4px;
+    background-color: white;
+    color: grey;
+    padding: 0.5rem 2.5rem;
+        border: 3px solid grey;
+    border-radius: 10px;
     cursor: pointer;
 }
 
 .cancel {
     background-color: white ;
-    color: white;
-    padding: 10px 20px;
-    border: 3px solid red;
-    border-radius: 8px;
+    padding: 0.5rem 2.5rem;    border: 3px solid red;
+    border-radius: 10px;
     cursor: pointer;
     margin: auto;
 
@@ -171,11 +178,32 @@
 }
 
 .save {
-    border: 3px solid grey;
+    border: 3px solid skyblue;
+    border-radius: 10px;
 
     background-color: grey;
     color: white;
-    padding: 10px 20px;
-    margin-left: 10px;
+    padding: 0.5rem 2.5rem;
+        margin-left: 41px;
     
 }
+
+.board-container {
+    position: relative;
+  }
+  
+  .task-form-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+
+  

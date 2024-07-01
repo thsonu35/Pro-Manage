@@ -1,46 +1,76 @@
+.body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .register-container {
     display: flex;
+    width: 100vw;
     height: 100vh;
 }
 
 .register-left {
-    flex: 1;
+    flex: 3;
     background-color: #17A2B8;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #fff;
-}
-.img-Div {
-    height: 400px;
-    width: 400px;
-}
-/* .onbording-msg{
-
-} */
-.astronaut-img {
-   height: 100%;
-   width:  100%;
+    
 }
 
 .register-welcome {
     text-align: center;
     display: flex;
+    margin-bottom: 40px;
     flex-direction: column;
 }
 
 .register-right {
-    flex: 1;
+    flex: 2;
     background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.img-Div {
+    position: relative;
+    height: 400px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.logo-img {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
+}
+
+.astronaut-img {
+    position: relative;
+    top:40px;
+    z-index: 1;
+    width: 90%;
+    height: auto;
+    object-fit: cover;
+}
+
 .register-form-container {
     width: 80%;
     max-width: 400px;
+}
+
+.onboarding-msg{
+    font-size: 15px;
+    margin-top: 0px;
+    object-fit: contain;
 }
 
 h2 {
@@ -54,10 +84,6 @@ h2 {
     margin-bottom: 15px;
 }
 
-.input-box label {
-    flex: 0 0 40px;
-}
-
 .input-box input {
     flex: 1;
     padding: 10px;
@@ -66,16 +92,18 @@ h2 {
 }
 
 .register-button {
-    width: 90%;
+    margin-top: 20px;
+
+    display: inline-block;
+    width: 100%;
     max-width: 400px;
-    padding: 10px;
-margin-left: 10% ;  
-  background-color: #17A2B8;
+    padding:12px;
+    background-color: #17A2B8;
     color: #fff;
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     transition: background-color 0.3s ease;
 }
 
@@ -90,15 +118,14 @@ footer {
 
 footer a {
     display: inline-block;
-    width: 88%;
+    width: 98%;
     max-width: 400px;
     padding: 10px;
-margin-left: 8% ; 
+    margin: 0;
     color: #17A2B8;
     border: 1px solid #17A2B8;
     border-radius: 30px;
     text-decoration: none;
-
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 

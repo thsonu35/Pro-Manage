@@ -1,5 +1,5 @@
 .board-container {
-    padding: 10px;
+    padding: 0 10px;
     position: relative;
     height: calc(100vh - 145px); /* Adjust as needed for the overall height */
 }
@@ -7,16 +7,22 @@
 .board {
     display: flex;
     overflow-x: auto;
-    height: 91%;
+    height: 100%;
+}
+
+.board-text{
+    font-size: 1.6rem;
+    font-weight: bolder;
+    padding-left: 30px;
 }
 
 .column {
-    flex: 0 0 25%;
-    margin: 0 30px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
+    flex: 0 0 30%;
+    margin: 5px 30px;
+    background-color:  #3a7dc91a;
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 340px;
     display: flex;
     flex-direction: column;
 }
@@ -26,8 +32,14 @@
     justify-content: space-between;
     align-items: center;
 }
+.column-sub-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .create-task-button {
+    font-size: 2rem;
     cursor: pointer;
     margin-right: 10px; /* Adjust margin as needed */
 }
