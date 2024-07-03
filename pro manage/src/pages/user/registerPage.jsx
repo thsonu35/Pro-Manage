@@ -45,7 +45,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post('https://final-evolution-project-cuvette-api.vercel.app/api/auth/register', { name, email, password }, {
+            const response = await axios.post('https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/auth/register', { name, email, password }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

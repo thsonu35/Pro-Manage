@@ -28,7 +28,7 @@ export default function Tasks({ id, task, sendDataToParent, onEdit, collapsedAll
   const onMove = async (taskId, status) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://final-evolution-project-cuvette-api.vercel.app/api/tasks/movetask', {
+      const response = await fetch('https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/tasks/movetask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

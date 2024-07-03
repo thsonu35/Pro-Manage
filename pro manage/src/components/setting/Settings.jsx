@@ -26,7 +26,7 @@ const Settings = () => {
             }
 
             const response = await axios.put(
-                'https://final-evolution-project-cuvette-api.vercel.app/api/auth/updatepassword',
+                'https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/auth/updatepassword',
                 { oldPassword, newPassword },
                 {
                     headers: {

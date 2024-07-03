@@ -67,11 +67,11 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
       let response;
 
       if (initialTask) {
-        response = await axios.put(`https://final-evolution-project-cuvette-api.vercel.app/api/update/${initialTask._id}`, updatedTask, { headers });
+        response = await axios.put(`https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/update/${initialTask._id}`, updatedTask, { headers });
         toast.success('Task updated');
 
       } else {
-        response = await axios.post('https://final-evolution-project-cuvette-api.vercel.app/api/tasks', updatedTask, { headers });
+        response = await axios.post('https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/tasks', updatedTask, { headers });
       }
 
       console.log('Task successfully saved:', response.data);

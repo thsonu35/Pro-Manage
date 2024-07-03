@@ -10,7 +10,7 @@ const Analytics = () => {
     const fetchTaskData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`https://final-evolution-project-cuvette-api.vercel.app/api/tasks`, {
+        const response = await axios.get(`https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/tasks`, {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',

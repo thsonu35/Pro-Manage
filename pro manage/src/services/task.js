@@ -15,7 +15,7 @@ export const getAllTasks = async (timeframe) => {
     const headers = {
       Authorization: token,
     };
-    const response = await axios.get(`https://final-evolution-project-cuvette-api.vercel.app/api/tasks?filter=${timeframe}`,{headers});
+    const response = await axios.get(`https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/tasks?filter=${timeframe}`,{headers});
     return response; // Return only data from the response
   } catch (error) {
    
