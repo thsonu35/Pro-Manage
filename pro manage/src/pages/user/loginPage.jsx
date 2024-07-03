@@ -36,7 +36,7 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', formData, {
+            const response = await axios.post('https://final-evolution-project-cuvette-api.vercel.app/api/auth/login', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

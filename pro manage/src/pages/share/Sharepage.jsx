@@ -10,7 +10,7 @@ const Sharepage = () => {
   useEffect(() => {
     const fetchTaskData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/share/${id}`);
+        const response = await fetch(`https://final-evolution-project-cuvette-api.vercel.app/api/share/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch task data');
         }

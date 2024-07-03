@@ -57,8 +57,8 @@ const Board = () => {
   const handleSaveTask = async (taskData) => {
     try {
       const url = taskData._id 
-        ? `http://localhost:3000/api/tasks/${taskData._id}` 
-        : 'http://localhost:3000/api/tasks';
+        ? `https://final-evolution-project-cuvette-api.vercel.app/api/tasks/${taskData._id}` 
+        : 'https://final-evolution-project-cuvette-api.vercel.app/api/tasks';
       const method = taskData._id ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -98,7 +98,7 @@ const Board = () => {
   const handleAssign = async (email) => {
     try {
       // Call backend API to check if user with `email` exists
-      const response = await fetch(`http://localhost:3000/api/users/${email}`, {
+      const response = await fetch(`https://final-evolution-project-cuvette-api.vercel.app/api/users/${email}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
