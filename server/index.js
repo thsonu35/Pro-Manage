@@ -10,7 +10,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 // Log streams
-
+const logStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
+const errorStream = fs.createWriteStream(path.join(__dirname, 'error.txt'), { flags: 'a' });
 
 // Middleware
 app.use(bodyParser.json());
@@ -19,7 +20,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use("/api", taskRoutes);
+app.use('/api', taskRoutes);
 
 // Logger middleware
 app.use((req, res, next) => {
@@ -30,7 +31,6 @@ app.use((req, res, next) => {
     console.log(log);
     next();
 });
-
 
 // Error handling middleware
 app.use((req, res, next) => {

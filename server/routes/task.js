@@ -20,4 +20,8 @@ router.put('/update/:id', auth, updateTask);
 router.delete('/tasks/:id', auth, deleteTask);
 router.get('/share/:id', shareTask); 
 
+router.get('/dummy', (req, res) => {
+    res.status(200).json({ message: 'Dummy route is working!' });
+  });
+
 module.exports = router;
