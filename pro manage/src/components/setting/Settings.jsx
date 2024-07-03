@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import './setting.css';
-import Sidebar from '../slidebar/slidebar'; // Ensure the path matches your directory structure
+import Sidebar from '../slidebar/slidebar'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import { toast } from 'react-hot-toast'; // Import toast from react-hot-toast
 
 const Settings = () => {
     const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
     const [showPassword, setShowPassword] = useState(false);
     const name = localStorage.getItem('name');
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,14 +38,14 @@ const Settings = () => {
 
             if (response.status === 200) {
                 console.log('Password updated:', response.data);
-                alert('Password updated successfully!');
+                toast.success('Password updated successfully!'); // Display success toast
             } else {
                 console.error('Password update failed:', response.data);
-                alert('Failed to update password');
+                toast.error('Failed to update password'); // Display error toast
             }
         } catch (error) {
             console.error('Password update failed:', error);
-            alert('Failed to update password');
+            toast.error('Failed to update password'); // Display error toast
         }
     };
 
@@ -68,7 +68,6 @@ const Settings = () => {
                             name="username"
                             placeholder={name}
                             className="form-input"
-                            
                         />
                     </div>
                     <div className="input-group">

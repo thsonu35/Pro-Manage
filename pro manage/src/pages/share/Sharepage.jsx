@@ -41,8 +41,14 @@ const Sharepage = () => {
         </div>
         <div className="task-details">
           <div className="priority-menu">
-            <p className="priority-label"><span>{taskDetails.priority} PRIORITY</span></p>
-          </div>
+          <div className='priority-label'>
+        <p className={`priority-label ${taskDetails.priority.toLowerCase()}-priority`}>
+
+</p>
+{taskDetails.priority === 'HIGH' && <span className='priority-label'>HIGH PRIORITY</span>}
+  {taskDetails.priority === 'MODERATE' && <span className='priority-label'>MODERATE PRIORITY</span>}
+  {taskDetails.priority === 'LOW' && <span className='priority-label'>LOW PRIORITY</span>}
+  </div >          </div>
           <p className="title">{taskDetails.title}</p>
 
           <div className="checklist-toggle-container">

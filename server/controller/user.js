@@ -27,6 +27,7 @@ const registerUser = async (req, res) => {
 };
 
 
+
 const allUsers = async (req, res) => {
     try {
         const { email, password } = req.body
@@ -61,15 +62,15 @@ const loginUser = async (req, res) => {
             return res.status(400).send('Invalid email or password');
         }
 
-        const isPasswordValid = await bcrypt.compare(password, checkUser.password); // Use checkUser.password
+        const isPasswordValid = await bcrypt.compare(password, checkUser.password); 
         if (!isPasswordValid) {
             return res.status(400).send('Invalid email or password');
         }
 
         const token = jwt.sign(
-            { userId: checkUser._id, email: checkUser.email, name: checkUser.name }, // Include user email in the token payload
-            'secret', // Your secret key
-            { expiresIn: '24h' } // Token expiration time
+            { userId: checkUser._id, email: checkUser.email, name: checkUser.name }, 
+            'secret', 
+            { expiresIn: '10h' } 
         );
         res.status(200).json({
             token,
@@ -91,7 +92,6 @@ const updatePassword = async (req, res) => {
             return res.status(400).send("Please fill all the fields");
         }
 
-        // Assuming req.userId is set by the auth middleware
         const checkUser = await User.findById(req.userId);
 
         if (!checkUser) {
@@ -116,25 +116,26 @@ const updatePassword = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 };
+const checkUserByEmail = async (req, res) => {
+    const { email } = req.body;
 
-
-const nameuser = async (req, res) => {
     try {
-        const user = await User.findById(req.userId);
+        const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (user) {
+            // User exists
+            return res.status(200).json({ exists: true, message: 'User found in the database.' });
+        } else {
+            // User does not exist
+            return res.status(404).json({ exists: false, message: 'User not found in the database.' });
         }
-        const name = ({ name: user.name })
-        res.status(200).send(name);
     } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ message: 'Server error', error: err.message });
+        console.error(err);
+        return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 
 
 
-
-module.exports = {allUsers, registerUser, nameuser, loginUser,updatePassword};
+module.exports = {allUsers, registerUser,checkUserByEmail, loginUser,updatePassword};

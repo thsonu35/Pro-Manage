@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './TodoCard.css';
 import axios from 'axios';
 import { Toaster, toast } from 'react-hot-toast';
+import PopupComponent from '../popup/popup'; // Adjust path as per your file structure
 
 import menuIcon from '../../../public/Group 544menu.png';
 
-const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleCollapse, collapsedColumns }) => {
+const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount, collapsedAll }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(collapsedAll);
   const [updatedChecklist, setUpdatedChecklist] = useState(task.checklist);
   const [loading, setLoading] = useState(false); // State for loading indicator
+  const [showPopup, setShowPopup] = useState(false); // State for showing the popup
+
+  useEffect(() => {
+    setCollapsed(collapsedAll);
+  }, [collapsedAll]);
 
   const toggleChecklist = () => {
     setCollapsed(!collapsed);
@@ -19,10 +25,9 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleC
   const copySharelink = (urllink) => {
     const fullUrl = `${window.location.origin}${urllink}`;
     navigator.clipboard.writeText(fullUrl).then(() => {
-      Toaster.success("share link copied")
+      toast.success("Share link copied");
     }).catch(err => {
-      toast.success("share link copied")
-
+      toast.error("Failed to copy share link");
     });
   };
 
@@ -66,13 +71,11 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleC
   const handleDelete = async () => {
     try {
       setLoading(true); // Start loading
-
       await onDelete(task._id); // Call onDelete with task ID
     } catch (error) {
       console.error('Error deleting task:', error);
     } finally {
       setLoading(false); // Stop loading
-      window.location.reload(); // Reload page after API call completes
     }
   };
 
@@ -104,6 +107,23 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleC
     backgroundColorClass = 'grey-bg'; // Default grey background
   }
 
+  const openDeletePopup = () => {
+    setShowPopup(true); // Show the popup when delete is clicked
+  };
+
+  const closePopup = () => {
+    setShowPopup(false); // Close the popup
+  };
+
+  const handleDeleteConfirm = async () => {
+    await handleDelete(); // Confirm delete and call handleDelete
+    closePopup(); // Close the popup after deletion
+  };
+
+  const handleDeleteCancel = () => {
+    setShowPopup(false); // Close the popup if user cancels delete
+  };
+
   return (
     <div>
       {loading && (
@@ -113,11 +133,14 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleC
       )}
       <aside className="card-content">
         <div className="priority-menu">
-          <p className="priority-label">
-            {task.priority === 'HIGH' && <span style={{color: 'red'}}>HIGH PRIORITY</span>}
-            {task.priority === 'MODERATE' && <span style={{color: 'orange'}}>MODERATE PRIORITY</span>}
-            {task.priority === 'LOW' && <span style={{color: 'green'}}>LOW PRIORITY</span>}
-          </p>
+          <div className='priority-label'>
+        <p className={`priority-label ${task.priority.toLowerCase()}-priority`}>
+
+</p>
+{task.priority === 'HIGH' && <span className='priority-label'>HIGH PRIORITY</span>}
+  {task.priority === 'MODERATE' && <span className='priority-label'>MODERATE PRIORITY</span>}
+  {task.priority === 'LOW' && <span className='priority-label'>LOW PRIORITY</span>}
+  </div >
           <div className="menu-container">
             <button className="menu-btn" onClick={() => setShowMenu(!showMenu)}>
               <img src={menuIcon} alt="Menu" className="menu-icon" />
@@ -130,7 +153,7 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleC
                 <div className="dropdown-item" onClick={() => copySharelink(`/share/${task._id}`)}>
                   Share
                 </div>
-                <div className="dropdown-item delete" onClick={handleDelete}>
+                <div className="dropdown-item delete" onClick={openDeletePopup}>
                   Delete
                 </div>
               </div>
@@ -139,6 +162,14 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleC
         </div>
         <p className="title" title={task.title}>{task.title}</p>
         
+        {/* PopupComponent */}
+        {showPopup && (
+          <PopupComponent
+            actionText="Delete"
+            onConfirm={handleDeleteConfirm}
+            onCancel={handleDeleteCancel}
+          />
+        )}
         
         <div className="checklist-toggle-container">
           <p className="checklist-head">
@@ -213,6 +244,7 @@ TodoCard.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onMove: PropTypes.func.isRequired,
   onUpdateCheckedCount: PropTypes.func.isRequired,
+  collapsedAll: PropTypes.bool.isRequired,
 };
 
 export default TodoCard;

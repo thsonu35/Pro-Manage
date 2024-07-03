@@ -7,15 +7,24 @@ import Tasks from '../Taskboard';
 import { getAllTasks } from '../../services/task';
 import { Toaster, toast } from 'react-hot-toast';
 import 'react-toastify/dist/ReactToastify.css';
-
+import assign from '/Group 3779addcolab.png';
+import AddUser from '../adduser/adduser'; // Assuming correct path for AddUser component
 
 const Board = () => {
   const [tasks, setTasks] = useState([]);
   const [change, setChange] = useState(" ");
-  const notify = (data) => toast.success("status update");
+  const notify = (data) => toast.success("Status update");
   const [timeframe, setTimeframe] = useState();
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
+  const [collapsedAll, setCollapsedAll] = useState(true);
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [assignEmail, setAssignEmail] = useState('');
+  const [assignError, setAssignError] = useState('');
+
+  const toggleCollapse = () => {
+    setCollapsedAll(!collapsedAll);
+  };
 
   const [collapsedColumns, setCollapsedColumns] = useState({
     backlog: false,
@@ -44,8 +53,6 @@ const Board = () => {
     setChange(data);
     notify(`Status changed to ${data}`);
   }
-
-
 
   const handleSaveTask = async (taskData) => {
     try {
@@ -88,23 +95,40 @@ const Board = () => {
     }
   };
 
-  const handleDelete = async (taskId) => {
+  const handleAssign = async (email) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/delete/${taskId}`, {
-        method: 'DELETE',
+      // Call backend API to check if user with `email` exists
+      const response = await fetch(`http://localhost:3000/api/users/${email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+
       if (!response.ok) {
-        throw new Error('Failed to delete task');
+        throw new Error('User not found');
       }
-      await response.json();
-      setTasks(prevTasks => ({
-        ...prevTasks,
-        data: prevTasks.data.filter(task => task._id !== taskId)
-      }));
-      notify("Task Deleted");
+
+      // If user exists, perform assignment logic
+      // Example logic: update task with assigned user
+      // Replace with your specific logic here
+
+      setAssignError('');
+      setShowAddUser(false);
     } catch (error) {
-      console.error('Error deleting task:', error);
+      setAssignError('User not found');
+      console.error('Error assigning user:', error);
     }
+  };
+
+  const handleAssignCancel = () => {
+    setShowAddUser(false);
+    setAssignEmail('');
+    setAssignError('');
+  };
+
+  const openAssignPopup = () => {
+    setShowAddUser(true);
   };
 
   return (
@@ -112,7 +136,7 @@ const Board = () => {
       <Toaster />
       
       <div className="select-container">
-        <l className="board-text"><p1>Board</p1>
+        <l className="board-text"><p1>Board <img src={assign} alt="" onClick={openAssignPopup} /></p1>
         <p className='filterbtn'>  <select id="timeframe" name="timeframe" onChange={handleTimeframeChange}>
         <option value="thisWeek">This Week</option>
           <option value="today">Today</option>
@@ -132,10 +156,9 @@ const Board = () => {
                     +
                   </span>
                 )}
-                <span className="collapse-icon" onClick={'this button collaps all the expand checklist inside todo card '}>
+                <span className="collapse-icon" onClick={toggleCollapse}>
                   <img 
                     src={colaps} 
-                   
                   />
                 </span>
               </div>
@@ -157,6 +180,7 @@ const Board = () => {
                         setShowTaskForm(true);
                         setCurrentTask(task);
                       }}
+                      collapsedAll={collapsedAll} toggleCollapse={toggleCollapse}
                       onDelete={() => handleDelete(task._id)}
                     />
                   ))
@@ -181,6 +205,14 @@ const Board = () => {
           </div>
         </div>
       )}
+
+      {showAddUser && (
+        <AddUser
+          onConfirm={handleAssign}
+          onCancel={handleAssignCancel}
+        />
+      )}
+
     </div>
   );
 };

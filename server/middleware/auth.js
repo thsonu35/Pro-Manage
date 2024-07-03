@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Ensure the User model is correctly imported
+const User = require('../models/User'); 
 
 const auth = async (req, res, next) => {
     try {
@@ -10,14 +10,14 @@ const auth = async (req, res, next) => {
 
         const decode = jwt.verify(token, "secret");
 
-        req.userId = decode.userId; // Attach userId to req
+        req.userId = decode.userId; 
 
-        // Fetch user email from the database using userId
+       
         const user = await User.findById(req.userId);
         if (!user) {
             return res.status(404).send("User not found");
         }
-        req.email = user.email; // Attach email to req
+        req.email = user.email; 
         next();
     } catch (err) {
         console.error(err.message);

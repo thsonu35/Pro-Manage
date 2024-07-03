@@ -3,40 +3,38 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './sidebar.css';
-import PopupComponent from '../popup/popup'; // Adjust path as per your file structure
+import PopupComponent from '../popup/popup'; 
 
 const Sidebar = () => {
     const [activeLink, setActiveLink] = useState('Board');
-    const [showPopup, setShowPopup] = useState(false); // State for showing the popup
+    const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
 
     const handleLinkClick = (link) => {
         if (link === 'Logout') {
-            setShowPopup(true); // Show the popup if logout link is clicked
+            setShowPopup(true); 
         } else {
             setActiveLink(link);
         }
     };
 
     const handleOpen = () => {
-        setShowPopup(true); // Show the popup if logout link is clicked
+        setShowPopup(true); 
     };
 
     const closePopup = () => {
-        setShowPopup(false); // Close the popup
+        setShowPopup(false); 
     };
 
     const handleLogoutConfirm = () => {
-        // Perform logout actions here, such as clearing session, etc.
-        // Example: window.location.href = '/logout'; // Redirect to logout route
         localStorage.removeItem("token");
         console.log('Logout confirmed');
         navigate("/login");
-        setShowPopup(false); // Close the popup after logout
+        setShowPopup(false); 
     };
 
     const handleLogoutCancel = () => {
-        setShowPopup(false); // Close the popup if user cancels logout
+        setShowPopup(false); 
     };
 
     return (
@@ -80,12 +78,11 @@ const Sidebar = () => {
                         </li>
                     </ul>
                 </nav>
-                <div className="logout">
+                <div className="logout" onClick={() => handleOpen()}>
                     <img src="Logoutlogout.png" alt="Logout" />
-                    <span onClick={() => handleOpen()}>Logout</span>
+                    <span >Logout</span>
                 </div>
             </div>
-            {/* PopupComponent */}
             {showPopup && (
                 <PopupComponent
                     actionText="Logout"

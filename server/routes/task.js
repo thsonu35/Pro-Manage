@@ -18,6 +18,6 @@ router.put('/tasks/:taskId/checklist/:index', auth, updateChecklistItem);
 
 router.put('/update/:id', auth, updateTask);
 router.delete('/tasks/:id', auth, deleteTask);
-router.get('/share/:id', shareTask); // Assuming sharing doesn't require authentication
+router.get('/share/:id', shareTask); 
 
 module.exports = router;

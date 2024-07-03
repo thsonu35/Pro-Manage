@@ -11,7 +11,12 @@
     transition: 0.3s;
 }
 
-
+.oinput{
+    width: 98%;
+    border: 2px solid grey;
+    padding: 10px 0;
+    border-radius: 10px;
+}
 
 .popup-content {
     position: fixed;
@@ -38,23 +43,35 @@
     margin-top: 1.2rem;
 }
 
+.got-it{
+    width: 300px;
+    justify-content: center;
+    align-items: center;
+    background-color: #17A2B8;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 9px;
+}
+
 .popup-content .confirm {
     color: #fff;
     background-color: rgb(23, 162, 184);
     border: none;
-    padding: 0.9rem 0px;
+    padding: 0.9rem 43px;
     border-radius: 15px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     text-transform: capitalize;
+    margin: 0px 5px;
 }
 
 .popup-content .cancel {
     color: red;
     background-color: white;
     border: 1px solid red;
-    padding: 0.9rem 125px;
+    padding: 0.9rem 46px;
     border-radius: 15px;
     font-size: 0.9rem;
     font-weight: 600;

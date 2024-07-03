@@ -1,7 +1,7 @@
 import React from 'react';
 import TodoCard from './todocard/TodoCard';
 
-export default function Tasks({id, task, sendDataToParent, onEdit}) {
+export default function Tasks({ id, task, sendDataToParent, onEdit, collapsedAll, toggleCollapse }) {
 
   const onDelete = async (taskId) => {
     try {
@@ -18,14 +18,7 @@ export default function Tasks({id, task, sendDataToParent, onEdit}) {
         throw new Error('Failed to delete task');
       }
 
-      if (!response.ok) {
-        throw new Error('Failed to delete task');
-      }
-
-      // Notify parent component of deletion if needed
       sendDataToParent();
-
-      // Optionally, update local state or refresh tasks
       console.log('Task deleted successfully', taskId);
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -49,7 +42,6 @@ export default function Tasks({id, task, sendDataToParent, onEdit}) {
       }
 
       sendDataToParent(status);
-
       console.log('Task moved successfully', taskId, status);
     } catch (error) {
       console.error('Error moving task:', error);
@@ -65,7 +57,8 @@ export default function Tasks({id, task, sendDataToParent, onEdit}) {
         onDelete={() => onDelete(task._id)}
         onMove={(status) => onMove(task._id, status)}
         sendDataToParent={sendDataToParent}
-
+        collapsedAll={collapsedAll} // Pass collapsedAll
+        toggleCollapse={toggleCollapse} // Pass toggleCollapse
       />
     </div>
   );

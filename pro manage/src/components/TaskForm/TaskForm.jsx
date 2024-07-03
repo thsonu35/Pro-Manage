@@ -57,10 +57,8 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
     };
 
     try {
-      // Retrieve the token from localStorage
       const token = localStorage.getItem('token');
 
-      // Set headers with the token for authorization
       const headers = {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -69,12 +67,10 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
       let response;
 
       if (initialTask) {
-        // Update existing task
         response = await axios.put(`http://localhost:3000/api/update/${initialTask._id}`, updatedTask, { headers });
         toast.success('Task updated');
 
       } else {
-        // Create new task
         response = await axios.post('http://localhost:3000/api/tasks', updatedTask, { headers });
       }
 
@@ -87,7 +83,6 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
 
   const checkedCount = task.checklist.filter(item => item.checked).length;
 
-  // Custom date button component for DatePicker
   const CustomDateButton = React.forwardRef(({ value, onClick }, ref) => (
     <button className="due-date-button" onClick={onClick} ref={ref}>
       {value || 'Select Due Date'}
@@ -185,7 +180,6 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
           <DatePicker
             selected={task.dueDate}
             onChange={(date) => {
-              // Subtract one day from selected date
               const adjustedDate = new Date(date);
               adjustedDate.setDate(adjustedDate.getDate() + 1);
               setTask({ ...task, dueDate: adjustedDate });

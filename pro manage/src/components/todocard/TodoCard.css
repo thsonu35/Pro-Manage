@@ -27,12 +27,23 @@
   color: rgb(133, 133, 133);
 }
 
-.priority-label::before {
+.priority-label {
   content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: red; /* Default color for priority dot */
+    height: 9px;
+    border-radius: 50%;
+  
+}
+
+.high-priority  {
+  background-color: #FF2473;
+}
+
+.moderate-priority {
+  background-color: #18B0FF;
+}
+
+.low-priority {
+  background-color: #63C05B;
 }
 
 .menu-container {
@@ -157,7 +168,7 @@
 }
 
 .dropdown-item.delete {
-  color: red; /* Adjust delete item color as needed */
+  color: red; 
 }
 
 .duedate {
@@ -171,8 +182,6 @@
 
 
 
-/* Custom scrollbar styles */
-/* Adjust scrollbar styles as per your preference */
 ::-webkit-scrollbar {
   width: 7px;
 }

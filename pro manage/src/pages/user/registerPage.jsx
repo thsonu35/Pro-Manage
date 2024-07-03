@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import astronautImage from '/Artastronot.png';
 import logo from '/Backastro.png';
-import eyeIcon from '/eye.png'; // Ensure the path to your eye icon is correct
+import eyeIcon from '/eye.png'; 
 import lockIcon from '/lock.png';
 import userIcon from '/user.png';
 import emailIcon from '/email.png';
+import hideye from '/clarity_eye-hide-lineunhide.png'; 
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -112,8 +113,8 @@ const Register = () => {
                                             onChange={handleChange} 
                                         />
                                         <img 
-                                            src={eyeIcon} 
-                                            alt="Show Password" 
+                                            src={showPassword ? hideye : eyeIcon} 
+                                            alt="Toggle Password Visibility" 
                                             className="eye-icon" 
                                             onClick={toggleShowPassword} 
                                         />
@@ -130,8 +131,8 @@ const Register = () => {
                                             onChange={handleChange} 
                                         />
                                         <img 
-                                            src={eyeIcon} 
-                                            alt="Show Confirm Password" 
+                                            src={showConfirmPassword ? hideye : eyeIcon} 
+                                            alt="Toggle Confirm Password Visibility" 
                                             className="eye-icon" 
                                             onClick={toggleShowConfirmPassword} 
                                         />
