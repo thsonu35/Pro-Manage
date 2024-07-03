@@ -10,8 +10,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 // Log streams
-const logStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
-const errorStream = fs.createWriteStream(path.join(__dirname, 'error.txt'), { flags: 'a' });
+
 
 // Middleware
 app.use(bodyParser.json());
@@ -32,10 +31,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Home route
-app.get('/', (req, res) => {
-    res.status(200).send('Hello World!');
-});
 
 // Error handling middleware
 app.use((req, res, next) => {
