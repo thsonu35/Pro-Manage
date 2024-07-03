@@ -44,7 +44,7 @@ const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount, collap
       const taskId = task._id; // Assuming taskId is available in props or context
 
       const response = await axios.put(
-        `https://final-evolution-project-cuvette-q8hy2y2bb.vercel.app/api/tasks/${taskId}/checklist/${index}`,
+        `http://localhost:3000/api/tasks/${taskId}/checklist/${index}`,
         { checked: updatedList[index].checked },
         {
           headers: {
