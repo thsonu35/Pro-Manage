@@ -3,14 +3,19 @@ import TodoCard from '../todocard/TodoCard';
 import TaskForm from '../TaskForm/TaskForm';
 import colaps from '../../../public/codicon.png';
 import './board.css';
-import Taskboard from '../Taskboard'
+import Tasks from '../Taskboard';
+import { getAllTasks } from '../../services/task';
+import { Toaster, toast } from 'react-hot-toast';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Board = () => {
-
-  
-
-
-
+  const [tasks, setTasks] = useState([]);
+  const [change, setChange] = useState(" ");
+  const notify = (data) => toast.success("status update");
+  const [timeframe, setTimeframe] = useState();
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [currentTask, setCurrentTask] = useState(null);
 
   const [collapsedColumns, setCollapsedColumns] = useState({
     backlog: false,
@@ -19,89 +24,67 @@ const Board = () => {
     done: false,
   });
 
-  const [showTaskForm, setShowTaskForm] = useState(false);
-  // const [tasks, setTasks] = useState({
-  //   backlog: [],
-  //   todo: [],
-  //  inProgress: [],
-  //   done: [],
-  // });
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const tasksData = await getAllTasks(timeframe);
+      if (tasksData) {
+        setTasks(tasksData);
+      } else {
+        setTasks([]);
+      }
+    };
+    fetchTasks();
+  }, [change, timeframe]);
 
-  const [currentTask, setCurrentTask] = useState(null);
-
-  // useEffect(() => {
-  //   // Function to fetch tasks from your API
-  //   const fetchTasks = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost:3000/api/getall');
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch tasks');
-  //       }
-  //       const data = await response.json();
-  //       // Assuming your API response returns tasks grouped by status
-  //       setTasks(data); // Update tasks state with API data
-  //     } catch (error) {
-  //       console.error('Error fetching tasks:', error);
-  //     }
-  //   };
-
-  //   fetchTasks();
-  // }, []); // Empty dependency array ensures the effect runs only once on mount
-
-  const toggleCollapse = (column) => {
-    setCollapsedColumns({
-      ...collapsedColumns,
-      [column]: !collapsedColumns[column],
-    });
+  const handleTimeframeChange = (event) => {
+    setTimeframe(event.target.value);
   };
 
-  const handleSaveTask = async (newTask) => {
+  function handleDataFromChild(data) {
+    setChange(data);
+    notify(`Status changed to ${data}`);
+  }
+
+
+
+  const handleSaveTask = async (taskData) => {
     try {
-      const response = await fetch('http://localhost:3000/api/create', {
-        method: 'POST',
+      const url = taskData._id 
+        ? `http://localhost:3000/api/tasks/${taskData._id}` 
+        : 'http://localhost:3000/api/tasks';
+      const method = taskData._id ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newTask),
+        body: JSON.stringify(taskData),
       });
+
       if (!response.ok) {
         throw new Error('Failed to save task');
       }
+
       const savedTask = await response.json();
-      setTasks({
-        ...tasks,
-        [savedTask.status]: [...tasks[savedTask.status], savedTask],
+      notify(taskData._id ? "Task Updated" : "Task Created");
+
+      setTasks(prevTasks => {
+        const updatedTasks = {...prevTasks};
+        if (taskData._id) {
+          updatedTasks.data = updatedTasks.data.map(task => 
+            task._id === savedTask._id ? savedTask : task
+          );
+        } else {
+          updatedTasks.data = [...updatedTasks.data, savedTask];
+        }
+        return updatedTasks;
       });
+
       setShowTaskForm(false);
       setCurrentTask(null);
     } catch (error) {
       console.error('Error saving task:', error);
-    }
-  };
-
-  const handleStatusChange = async (taskId, newStatus) => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/update/${taskId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update task status');
-      }
-      const updatedTask = await response.json();
-      const updatedTasks = { ...tasks };
-      const taskToMove = updatedTasks[updatedTask.status].find(task => task._id === taskId);
-      if (taskToMove) {
-        taskToMove.status = newStatus;
-        updatedTasks[updatedTask.status] = updatedTasks[updatedTask.status].filter(task => task._id !== taskId);
-        updatedTasks[newStatus] = [...updatedTasks[newStatus], taskToMove];
-        setTasks(updatedTasks);
-      }
-    } catch (error) {
-      console.error('Error updating task status:', error);
     }
   };
 
@@ -113,12 +96,12 @@ const Board = () => {
       if (!response.ok) {
         throw new Error('Failed to delete task');
       }
-      const deletedTask = await response.json();
-      const updatedTasks = { ...tasks };
-      Object.keys(updatedTasks).forEach(column => {
-        updatedTasks[column] = updatedTasks[column].filter(task => task._id !== taskId);
-      });
-      setTasks(updatedTasks);
+      await response.json();
+      setTasks(prevTasks => ({
+        ...prevTasks,
+        data: prevTasks.data.filter(task => task._id !== taskId)
+      }));
+      notify("Task Deleted");
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -126,41 +109,58 @@ const Board = () => {
 
   return (
     <div className="board-container">
-      <h1 className="board-text">Board</h1>
+      <Toaster />
+      
+      <div className="select-container">
+        <l className="board-text"><p1>Board</p1>
+        <p className='filterbtn'>  <select id="timeframe" name="timeframe" onChange={handleTimeframeChange}>
+        <option value="thisWeek">This Week</option>
+          <option value="today">Today</option>
+          <option value="thisMonth">This Month</option>
+        </select></p></l>
+      
+      </div>
+
       <div className="board">
-        {['backlog', 'todo', 'inProgress', 'done'].map(column => (
+        {['BACKLOG', 'TO DO', 'IN PROGRESS', 'DONE'].map(column => (
           <div className="column" key={column}>
             <div className="column-header">
-              <h3>{column.charAt(0).toUpperCase() + column.slice(1)}</h3>
+              <h3>{column}</h3>
               <div className="column-sub-header">
-                {column === 'todo' && (
+                {column === 'TO DO' && (
                   <span className="create-task-button" onClick={() => { setShowTaskForm(true); setCurrentTask(null); }}>
                     +
                   </span>
                 )}
-                <span className="collapse-icon" onClick={() => toggleCollapse(columm)}>
-                  {collapsedColumns[column] ? (
-                    <img src={colaps} alt="Expand" className="collapse-image" />
-                  ) : (
-                    <img src={colaps} alt="Collapse" className="collapse-image" />
-                  )}
+                <span className="collapse-icon" onClick={'this button collaps all the expand checklist inside todo card '}>
+                  <img 
+                    src={colaps} 
+                   
+                  />
                 </span>
               </div>
             </div>
             
-            {!collapsedColumns[column] && (
+            {!collapsedColumns[column.toLowerCase()] && (
               <div className="cards">
-                              <Taskboard/>
-
-                {/* {tasks[column](task => (
-                  <TodoCard
-                    key={task._id}
-                    task={task}
-                    onEdit={() => setCurrentTask(task)}
-                    onDelete={() => handleDelete(task._id)}
-                    onMove={(status) => handleStatusChange(task._id, status)}
-                  />
-                ))} */}
+                {tasks.length === 0 ? (
+                  <p>No tasks found</p>
+                ) : (
+                  tasks.data.map((task) => (
+                    task.status === column && 
+                    <Tasks 
+                      key={task._id}
+                      id={task._id} 
+                      task={task}  
+                      sendDataToParent={handleDataFromChild}
+                      onEdit={() => {
+                        setShowTaskForm(true);
+                        setCurrentTask(task);
+                      }}
+                      onDelete={() => handleDelete(task._id)}
+                    />
+                  ))
+                )}
               </div>
             )}
           </div>
@@ -170,7 +170,14 @@ const Board = () => {
       {showTaskForm && (
         <div className="task-form-overlay">
           <div className="task-form-container">
-            <TaskForm task={currentTask} onSave={handleSaveTask} onCancel={() => setShowTaskForm(false)} />
+            <TaskForm 
+              task={currentTask} 
+              onSave={handleSaveTask} 
+              onCancel={() => {
+                setShowTaskForm(false);
+                setCurrentTask(null);
+              }} 
+            />
           </div>
         </div>
       )}

@@ -1,38 +1,72 @@
-import React, { useEffect, useState } from 'react';
-import { getAllTasks } from "../services/task";
-import TodoCard from './todocard/TodoCard'; // Assuming the TodoCard component is in the same directory
+import React from 'react';
+import TodoCard from './todocard/TodoCard';
 
-export default function Tasks() {
-  const [tasks, setTasks] = useState([]);
+export default function Tasks({id, task, sendDataToParent, onEdit}) {
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const tasksData = await getAllTasks();
-      if (tasksData) {
-        setTasks(tasksData);
-      } else {
-        setTasks([]);
+  const onDelete = async (taskId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3000/api/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete task');
       }
-    };
 
-    fetchTasks();
-  }, []);
+      if (!response.ok) {
+        throw new Error('Failed to delete task');
+      }
+
+      // Notify parent component of deletion if needed
+      sendDataToParent();
+
+      // Optionally, update local state or refresh tasks
+      console.log('Task deleted successfully', taskId);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
+  const onMove = async (taskId, status) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/tasks/movetask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`
+        },
+        body: JSON.stringify({ taskId, status }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to move task');
+      }
+
+      sendDataToParent(status);
+
+      console.log('Task moved successfully', taskId, status);
+    } catch (error) {
+      console.error('Error moving task:', error);
+    }
+  };
 
   return (
     <div>
-      {tasks.length === 0 ? (
-        <p>No tasks found</p>
-      ) : (
-        tasks.data.map((task) => (
-          <TodoCard
-            key={task._id}
-            task={task}
-            onEdit={() => console.log('Edit', task._id)}
-            onDelete={() => console.log('Delete', task._id)}
-            onMove={(status) => console.log('Move', task._id, status)}
-          />
-        ))
-      )}
+      <TodoCard
+        key={task._id}
+        task={task}
+        onEdit={() => onEdit(task)}
+        onDelete={() => onDelete(task._id)}
+        onMove={(status) => onMove(task._id, status)}
+        sendDataToParent={sendDataToParent}
+
+      />
     </div>
   );
 }

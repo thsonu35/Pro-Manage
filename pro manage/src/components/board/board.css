@@ -1,7 +1,8 @@
 .board-container {
     padding: 0 10px;
     position: relative;
-    height: calc(100vh - 145px); /* Adjust as needed for the overall height */
+    height: 20px;
+    height: calc(100vh - 145px); 
 }
 
 .board {
@@ -10,16 +11,26 @@
     height: 100%;
 }
 
+p1{
+    font-size: xx-large;
+
+}
+p{
+    padding-right: 10px;
+}
+
 .board-text{
-    font-size: 1.6rem;
     font-weight: bolder;
     padding-left: 30px;
+    align-items: center;
+    justify-content:space-between;
+    display: flex;
 }
 
 .column {
     flex: 0 0 30%;
     margin: 5px 30px;
-    background-color:  #3a7dc91a;
+    background-color:  #eef2f5;
     border-radius: 15px;
     padding: 20px;
     min-width: 340px;
@@ -52,4 +63,13 @@
     margin-top: 10px;
     overflow-y: auto;
     max-height: 70vh; /* Adjust this value as needed for the overall height of the column */
+}
+
+.filterbtn{
+    .filterbtn {
+        font-size: 1rem;
+        font-weight: normal;
+        padding-right: 30px;
+        display: flex;
+    }
 }

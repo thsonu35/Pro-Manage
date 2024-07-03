@@ -1,22 +1,122 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './TodoCard.css';
-import menuIcon from '../../../public/Group 544menu.png';
-import { useState } from 'react';
+import axios from 'axios';
+import { Toaster, toast } from 'react-hot-toast';
 
-const TodoCard = ({ task, onEdit, onDelete, onMove }) => {
+import menuIcon from '../../../public/Group 544menu.png';
+
+const TodoCard = ({ task, onEdit, onDelete, onMove, onUpdateCheckedCount,toggleCollapse, collapsedColumns }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
+  const [updatedChecklist, setUpdatedChecklist] = useState(task.checklist);
+  const [loading, setLoading] = useState(false); // State for loading indicator
 
   const toggleChecklist = () => {
     setCollapsed(!collapsed);
   };
 
+  const copySharelink = (urllink) => {
+    const fullUrl = `${window.location.origin}${urllink}`;
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      Toaster.success("share link copied")
+    }).catch(err => {
+      toast.success("share link copied")
+
+    });
+  };
+
+  const handleCheck = async (index) => {
+    try {
+      setLoading(true); // Start loading
+
+      const updatedList = [...updatedChecklist];
+      updatedList[index].checked = !updatedList[index].checked;
+      setUpdatedChecklist(updatedList);
+
+      // Update the backend/database with the new checklist item
+      const token = localStorage.getItem('token'); // Assuming you have a token stored in localStorage
+      const taskId = task._id; // Assuming taskId is available in props or context
+
+      const response = await axios.put(
+        `http://localhost:3000/api/tasks/${taskId}/checklist/${index}`,
+        { checked: updatedList[index].checked },
+        {
+          headers: {
+            Authorization: token,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('Task checklist item updated:', response.data);
+      // Optionally, you can handle the response or trigger any UI updates
+      onUpdateCheckedCount(taskId, updatedList);
+    } catch (error) {
+      console.error('Error updating checklist item:', error);
+      // Optionally handle error states or display a message to the user
+    } finally {
+      setLoading(false); // Stop loading
+      window.location.reload(); // Reload page after API call completes
+    }
+  };
+
+  const checkedCount = task.checklist.filter((item) => item.checked).length;
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true); // Start loading
+
+      await onDelete(task._id); // Call onDelete with task ID
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    } finally {
+      setLoading(false); // Stop loading
+      window.location.reload(); // Reload page after API call completes
+    }
+  };
+
+  const statusOptions = ['TO DO', 'IN PROGRESS', 'DONE', 'BACKLOG'];
+  const availableStatusOptions = statusOptions.filter(status => status !== task.status);
+
+  // Function to check if the due date has passed
+  const isPastDue = () => {
+    const dueDate = new Date(task.dueDate);
+    const currentDate = new Date();
+    return dueDate < currentDate;
+  };
+
+  // Function to get month name and date
+  const getMonthAndDate = () => {
+    const dueDate = new Date(task.dueDate);
+    const month = dueDate.toLocaleString('default', { month: 'short' });
+    const date = dueDate.getDate();
+    return `${month} ${date}`;
+  };
+
+  // Determine the background color class
+  let backgroundColorClass = '';
+  if (task.status === 'DONE') {
+    backgroundColorClass = 'done';
+  } else if (isPastDue()) {
+    backgroundColorClass = 'past-due';
+  } else {
+    backgroundColorClass = 'grey-bg'; // Default grey background
+  }
+
   return (
-    <div className="task-card">
+    <div>
+      {loading && (
+        <div className="loading-screen">
+          <p>Loading...</p>
+        </div>
+      )}
       <aside className="card-content">
         <div className="priority-menu">
           <p className="priority-label">
-            <span>{task.priority.toUpperCase()} PRIORITY</span>
+            {task.priority === 'HIGH' && <span style={{color: 'red'}}>HIGH PRIORITY</span>}
+            {task.priority === 'MODERATE' && <span style={{color: 'orange'}}>MODERATE PRIORITY</span>}
+            {task.priority === 'LOW' && <span style={{color: 'green'}}>LOW PRIORITY</span>}
           </p>
           <div className="menu-container">
             <button className="menu-btn" onClick={() => setShowMenu(!showMenu)}>
@@ -27,22 +127,23 @@ const TodoCard = ({ task, onEdit, onDelete, onMove }) => {
                 <div className="dropdown-item" onClick={onEdit}>
                   Edit
                 </div>
-                <div className="dropdown-item">
+                <div className="dropdown-item" onClick={() => copySharelink(`/share/${task._id}`)}>
                   Share
                 </div>
-                <div className="dropdown-item delete" onClick={onDelete}>
+                <div className="dropdown-item delete" onClick={handleDelete}>
                   Delete
                 </div>
               </div>
             )}
           </div>
         </div>
-        <p className="title">{task.title}</p>
-        <p>{task.dueDate}</p>
+        <p className="title" title={task.title}>{task.title}</p>
+        
+        
         <div className="checklist-toggle-container">
           <p className="checklist-head">
             <span>
-              Checklist ({task.checklist.filter((item) => item.checked).length} / {task.checklist.length})
+              Checklist ({checkedCount} / {task.checklist.length})
             </span>
             <button className="collapse-expand-btn" onClick={toggleChecklist}>
               <svg
@@ -63,9 +164,14 @@ const TodoCard = ({ task, onEdit, onDelete, onMove }) => {
 
         {!collapsed && (
           <div className="checklist-tasks">
-            {task.checklist.map((item, index) => (
+            {updatedChecklist.map((item, index) => (
               <div key={index} className="task-item">
-                <input type="checkbox" className="checkbox" checked={item.checked} readOnly />
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  checked={item.checked}
+                  onChange={() => handleCheck(index)}
+                />
                 <p className="task-text">{item.text}</p>
               </div>
             ))}
@@ -73,8 +179,11 @@ const TodoCard = ({ task, onEdit, onDelete, onMove }) => {
         )}
 
         <div className="mutate-status-container">
+          {task.dueDate && <div className={`duedate ${backgroundColorClass}`}>
+            {getMonthAndDate()}
+          </div>}
           <div className="mutate-btns-container">
-            {['TO DO', 'IN PROGRESS', 'DONE'].map((status, index) => (
+            {availableStatusOptions.map((status, index) => (
               <button key={index} className="status-btn" onClick={() => onMove(status)}>
                 {status}
               </button>
@@ -97,12 +206,13 @@ TodoCard.propTypes = {
         checked: PropTypes.bool.isRequired,
       })
     ).isRequired,
-    dueDate: PropTypes.string.isRequired,
+    dueDate: PropTypes.string, // dueDate is now optional
     status: PropTypes.string.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onMove: PropTypes.func.isRequired,
+  onUpdateCheckedCount: PropTypes.func.isRequired,
 };
 
 export default TodoCard;

@@ -4,6 +4,7 @@ import './TaskForm.css';
 import { FaTrashAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Toaster, toast } from 'react-hot-toast';
 
 const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
   const [task, setTask] = useState({
@@ -70,20 +71,23 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
       if (initialTask) {
         // Update existing task
         response = await axios.put(`http://localhost:3000/api/update/${initialTask._id}`, updatedTask, { headers });
+        toast.success('Task updated');
+
       } else {
         // Create new task
-        response = await axios.post('http://localhost:3000/api/create', updatedTask, { headers });
+        response = await axios.post('http://localhost:3000/api/tasks', updatedTask, { headers });
       }
 
       console.log('Task successfully saved:', response.data);
       onSave(response.data);
     } catch (error) {
-      console.error('Error saving task:', error.response ? error.response.data : error.message) ;
+      console.error('Error saving task:', error.response ? error.response.data : error.message);
     }
   };
 
   const checkedCount = task.checklist.filter(item => item.checked).length;
 
+  // Custom date button component for DatePicker
   const CustomDateButton = React.forwardRef(({ value, onClick }, ref) => (
     <button className="due-date-button" onClick={onClick} ref={ref}>
       {value || 'Select Due Date'}
@@ -92,8 +96,9 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
 
   return (
     <div className="task-form">
+      <Toaster />
       <div className="form-group">
-        <label>Title*</label>
+        <label>Title <k>*</k> </label>
         <input
           type="text"
           value={task.title}
@@ -111,32 +116,31 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
         />
         {!isTitleValid && <div className="error-message">Title is required</div>}
       </div>
+
       <div className="form-group priority-options">
-        <label>Select Priority* :</label>
+        <label>Select Priority <k>*</k> :</label>
         <button
           className={`priority-button high ${task.priority === 'HIGH' ? 'active' : ''}`}
           onClick={() => setTask({ ...task, priority: 'HIGH' })}
-        >
-          <div className="priority-icon"></div>
+        ><div className="priority-icon"></div>
           High Priority
         </button>
         <button
           className={`priority-button moderate ${task.priority === 'MODERATE' ? 'active' : ''}`}
           onClick={() => setTask({ ...task, priority: 'MODERATE' })}
-        >
-          <div className="priority-icon"></div>
+        ><div className="priority-icon"></div>
           Moderate Priority
         </button>
         <button
           className={`priority-button low ${task.priority === 'LOW' ? 'active' : ''}`}
           onClick={() => setTask({ ...task, priority: 'LOW' })}
-        >
-          <div className="priority-icon"></div>
+        ><div className="priority-icon"></div>
           Low Priority
         </button>
       </div>
+
       <div className="form-group">
-        <label>Checklist * ({checkedCount}/{task.checklist.length})</label>
+        <label>Checklist <k>*</k>  ({checkedCount}/{task.checklist.length})</label>
         <div className="checklist-container">
           {task.checklist.map((item, index) => (
             <div key={index} className="checklist-item">
@@ -175,11 +179,17 @@ const TaskForm = ({ task: initialTask, onSave, onCancel }) => {
           <button className="add-button" onClick={addChecklistItem}>+ Add</button>
         </div>
       </div>
+
       <div className="form-group button-group">
         <div>
           <DatePicker
             selected={task.dueDate}
-            onChange={(date) => setTask({ ...task, dueDate: date })}
+            onChange={(date) => {
+              // Subtract one day from selected date
+              const adjustedDate = new Date(date);
+              adjustedDate.setDate(adjustedDate.getDate() + 1);
+              setTask({ ...task, dueDate: adjustedDate });
+            }}
             customInput={<CustomDateButton />}
             dateFormat="yyyy-MM-dd"
           />

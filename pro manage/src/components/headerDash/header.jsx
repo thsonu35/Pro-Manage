@@ -6,7 +6,8 @@ import './header.css';
 const fetchUserData = () => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve({ name: 'Sudhanshu' }); // Replace with actual user fetching logic
+            resolve({ name: localStorage.getItem('name')
+            }); // Replace with actual user fetching logic
         }, 1000);
     });
 };

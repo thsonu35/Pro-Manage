@@ -104,6 +104,9 @@
     margin-bottom: 10px;
 }
 
+k {
+    color:red
+}
 .checklist-item input[type="checkbox"] {
     margin-right: 10px;
 }
@@ -178,10 +181,10 @@
 }
 
 .save {
-    border: 3px solid skyblue;
+    border: 3px solid rgb(23, 162, 184);
     border-radius: 10px;
 
-    background-color: grey;
+    background-color: rgb(23, 162, 184);
     color: white;
     padding: 0.5rem 2.5rem;
         margin-left: 41px;

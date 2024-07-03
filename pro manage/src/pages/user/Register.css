@@ -18,7 +18,6 @@
     justify-content: center;
     align-items: center;
     color: #fff;
-    
 }
 
 .register-welcome {
@@ -43,7 +42,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
 }
 
 .logo-img {
@@ -55,7 +53,7 @@
 
 .astronaut-img {
     position: relative;
-    top:40px;
+    top: 40px;
     z-index: 1;
     width: 90%;
     height: auto;
@@ -67,7 +65,7 @@
     max-width: 400px;
 }
 
-.onboarding-msg{
+.onboarding-msg {
     font-size: 15px;
     margin-top: 0px;
     object-fit: contain;
@@ -79,25 +77,26 @@ h2 {
 }
 
 .input-box {
+    position: relative; /* Ensure the eye icon stays inside the input box */
     display: flex;
     align-items: center;
     margin-bottom: 15px;
 }
 
 .input-box input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 10px 10px;
+    width: 100%;
+    border: none;
     border-radius: 5px;
+    outline: none; /* Ensure the input doesn't show an outline on focus */
 }
 
 .register-button {
     margin-top: 20px;
-
     display: inline-block;
     width: 100%;
     max-width: 400px;
-    padding:12px;
+    padding: 12px;
     background-color: #17A2B8;
     color: #fff;
     border: none;
@@ -131,4 +130,23 @@ footer a {
 
 footer a:hover {
     text-decoration: underline;
+}
+
+.inpwlogo {
+    border-radius: 7px;
+    display: flex;
+    border: 1px solid grey;
+    width: 100%;
+    padding: 1px;
+    position: relative; /* Ensure the eye icon stays inside the input box */
+}
+
+.eye-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    width: 20px; /* Adjust the size as needed */
+    height: 20px; /* Adjust the size as needed */
+    top: 50%;
+    transform: translateY(-50%);
 }

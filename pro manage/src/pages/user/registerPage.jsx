@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import astronautImage from '/Artastronot.png';
 import logo from '/Backastro.png';
+import eyeIcon from '/eye.png'; // Ensure the path to your eye icon is correct
+import lockIcon from '/lock.png';
+import userIcon from '/user.png';
+import emailIcon from '/email.png';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -13,6 +17,9 @@ const Register = () => {
         password: '',
         confirmPassword: '',
     });
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const navigate = useNavigate();
 
@@ -51,8 +58,16 @@ const Register = () => {
         }
     };
 
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleShowConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
     return (
-        <div className="body">    
+        <div className="body">
             <div className="register-container">
                 <Toaster />
                 <div className="register-left">
@@ -75,16 +90,52 @@ const Register = () => {
                         <div className="forinput">
                             <form onSubmit={handleSubmit}>
                                 <div className="input-box">
-                                    <input type="text" name="name" id="name" placeholder="Name" onChange={handleChange} />
+                                    <div className='inpwlogo'>
+                                        <img src={userIcon} alt="User Icon" />
+                                        <input type="text" name="name" id="name" placeholder="Name" onChange={handleChange} />
+                                    </div>
                                 </div>
                                 <div className="input-box">
-                                    <input type="email" name="email" id="email" placeholder="Email" onChange={handleChange} />
+                                    <div className='inpwlogo'>
+                                        <img src={emailIcon} alt="Email Icon" />
+                                        <input type="email" name="email" id="email" placeholder="Email" onChange={handleChange} />
+                                    </div>
                                 </div>
                                 <div className="input-box">
-                                    <input type="password" name="password" id="password" placeholder="Password" onChange={handleChange} />
+                                    <div className='inpwlogo'>
+                                        <img src={lockIcon} alt="Lock Icon" />
+                                        <input 
+                                            type={showPassword ? "text" : "password"} 
+                                            name="password" 
+                                            id="password" 
+                                            placeholder="Password" 
+                                            onChange={handleChange} 
+                                        />
+                                        <img 
+                                            src={eyeIcon} 
+                                            alt="Show Password" 
+                                            className="eye-icon" 
+                                            onClick={toggleShowPassword} 
+                                        />
+                                    </div>
                                 </div>
                                 <div className="input-box">
-                                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm password" onChange={handleChange} />
+                                    <div className='inpwlogo'>
+                                        <img src={lockIcon} alt="Lock Icon" />
+                                        <input 
+                                            type={showConfirmPassword ? "text" : "password"} 
+                                            name="confirmPassword" 
+                                            id="confirmPassword" 
+                                            placeholder="Confirm password" 
+                                            onChange={handleChange} 
+                                        />
+                                        <img 
+                                            src={eyeIcon} 
+                                            alt="Show Confirm Password" 
+                                            className="eye-icon" 
+                                            onClick={toggleShowConfirmPassword} 
+                                        />
+                                    </div>
                                 </div>
                                 <button type="submit" className="register-button">Register</button>
                             </form>

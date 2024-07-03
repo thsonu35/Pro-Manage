@@ -35,15 +35,67 @@ const createTask = async (req, res, next) => {
 };
 
 const getTasksForUser = async (req, res) => {
+   
     try {
-        const tasks = await Task.find({ userId: req.userId })
+        const { filter } = req.query;
+        console.log(filter)
+        const now = new Date();
+        
+        const dateRanges = {
+            today: {
+                start: new Date(now.setHours(0, 0, 0, 0)),
+                end: new Date(now.setHours(23, 59, 59, 999))
+            },
+            thisWeek: {
+                start: new Date(now.setDate(now.getDate() - now.getDay())),
+                end: new Date(now.setDate(now.getDate() - now.getDay() + 6))
+            },
+            thisMonth: {
+                start: new Date(now.getFullYear(), now.getMonth(), 1),
+                end: new Date(now.getFullYear(), now.getMonth() + 1, 0)
+            }
+        };
 
-        // No need to check for !tasks because find will return an empty array if no tasks are found
-        if (tasks.length === 0) {
-            return res.status(404).json({ message: 'No tasks found for this user' });
+        const query = { userId: req.userId };
+        
+        if (filter && dateRanges[filter]) {
+            query.dueDate = {
+                $gte: dateRanges[filter].start,
+                $lte: dateRanges[filter].end
+            };
         }
 
-        res.status(200).send(tasks);
+        const tasks = await Task.find(query);
+        res.status(200).json(tasks);
+    } catch (err) {
+        console.error('Error fetching tasks:', err);
+        res.status(500).json({ message: 'Server error while fetching tasks' });
+    }
+};
+
+const updateChecklistItem = async (req, res) => {
+    const { taskId, index } = req.params;
+    const { checked } = req.body;
+
+    try {
+        let task = await Task.findById(taskId);
+
+        if (!task) return res.status(404).json({ msg: 'Task not found' });
+
+        if (task.userId.toString() !== req.userId) {
+            return res.status(401).json({ msg: 'User not authorized' });
+        }
+
+        if (index < 0 || index >= task.checklist.length) {
+            return res.status(400).json({ msg: 'Invalid checklist item index' });
+        }
+
+        // Update the specified checklist item
+        task.checklist[index].checked = checked;
+
+        await task.save();
+
+        res.json(task);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -74,6 +126,32 @@ const updateTask = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+const moveTask = async (req,res) =>{
+    const {taskId,status} = req.body;
+    console.log("hi")
+    try {
+        let task = await Task.findById(taskId);
+
+        if (!task) return res.status(404).json({ msg: 'Task not found' });
+
+        if (task.userId.toString() !== req.userId) {
+            return res.status(401).json({ msg: 'User not authorized' });
+        }
+
+        task = await Task.findByIdAndUpdate(
+            taskId,
+            { $set: { status } },
+            { new: true }
+        );
+
+        res.json(task);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+
+}
 
 const deleteTask = async (req, res) => {
     try {
@@ -122,7 +200,7 @@ const shareTask = async (req, res) => {
         };
 
         // Respond with success message and shareable link
-        res.status(200).json({ message: 'Task shared successfully', link: shareLink });
+        res.status(200).json({ message: 'Task shared successfully', taskDetails });
     } catch (error) {
         console.error('Error sharing task:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -130,6 +208,9 @@ const shareTask = async (req, res) => {
 };
 
 module.exports = {
+    moveTask,
+    updateChecklistItem,
+
     shareTask,
     createTask,
     getTasksForUser,

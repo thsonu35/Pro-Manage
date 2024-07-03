@@ -7,9 +7,9 @@ import Dashboard from './pages/dashboard/dashboard';
 import Analytics from './pages/analytics/Analytics';
 import Settings from './components/setting/Settings';
 import Board from './components/board/board';
-import Logout from './components/logout/logout';
+// import Logout from './components/logout/logout';
 // import TodoCard from './components/todocard/TodoCard';
-
+import Sharepage from './pages/share/Sharepage';
 import ProtectedRoute from './components/ProtectedRoute';
 function App() {
     return (
@@ -17,6 +17,7 @@ function App() {
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/share/:id" element={<Sharepage/>}/>
                 {/* <Route path="/card" element={<TodoCard />} /> */}
 
 
@@ -52,14 +53,14 @@ function App() {
                         </ProtectedRoute>
                     } 
                 />
-                <Route 
+                {/* <Route 
                     path="/logout" 
                     element={
                         <ProtectedRoute>
                             <Logout />
                         </ProtectedRoute>
                     } 
-                />
+                /> */}
             </Routes>
             <Toaster />
         </BrowserRouter>

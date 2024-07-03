@@ -5,12 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import astronautImage from '/Artastronot.png';
 import logo from '/Backastro.png';
+import user from '/user.png'
+import eyeIcon from '/eye.png'; // Ensure the path to your eye icon is correct
+import lockIcon from '/lock.png';
+import emailIcon from '/email.png';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
+
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -23,7 +29,6 @@ const LoginPage = () => {
     }, [navigate]);
 
     const handleChange = (e) => {
-       
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -56,8 +61,12 @@ const LoginPage = () => {
         }
     };
 
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
-        <div className="body">    
+        <div className="body">
             <div className="register-container">
                 <Toaster />
                 <div className="register-left">
@@ -80,10 +89,28 @@ const LoginPage = () => {
                         <div className="forinput">
                             <form onSubmit={handleSubmit}>
                                 <div className="input-box">
-                                    <input type="email" name="email" id="email" placeholder="Email" onChange={handleChange} />
+                                    <div className='inpwlogo'>
+                                        <img src={emailIcon} alt="Email Icon" />
+                                        <input type="email" name="email" id="email" placeholder="Email" onChange={handleChange} />
+                                    </div>
                                 </div>
                                 <div className="input-box">
-                                    <input type="password" name="password" id="password" placeholder="Password" onChange={handleChange} />
+                                    <div className='inpwlogo'>
+                                        <img src={lockIcon} alt="Lock Icon" />
+                                        <input 
+                                            type={showPassword ? "text" : "password"} 
+                                            name="password" 
+                                            id="password" 
+                                            placeholder="Password" 
+                                            onChange={handleChange} 
+                                        />
+                                        <img 
+                                            src={eyeIcon} 
+                                            alt="Show Password" 
+                                            className="eye-icon" 
+                                            onClick={toggleShowPassword} 
+                                        />
+                                    </div>
                                 </div>
                                 <button type="submit" className="register-button">Login</button>
                             </form>
