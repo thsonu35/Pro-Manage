@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 
 // MongoDB connection
 mongoose
-    .connect('mongodb+srv://caps:Password@cluster1.9xljwe4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1')
+    .connect('mongodb+srv://thsonu350:proManageAdmin@cluster0.el3wk3v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('Connected to DB'))
     .catch((err) => console.log(err));
 
